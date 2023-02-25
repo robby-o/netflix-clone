@@ -7,7 +7,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 export type Data = {
   done: Boolean
-  msg: string
 }
 
 export default async function login(
@@ -39,27 +38,17 @@ export default async function login(
       // check if user exists
       const isNewUserQuery = await isNewUser(token, metadata.issuer)
 
-      if (isNewUserQuery) {
-        // creat a new user
-        const createNewUserMutation = await createNewUser(token, metadata)
-        console.log({ createNewUserMutation })
+      // create new user
+      isNewUserQuery && (await createNewUser(token, metadata))
 
-        // set the cookie
-
-        const cookie = setTokenCookie(token, res)
-        console.log({ cookie })
-        res.send({ done: true, msg: 'is new user' })
-      } else {
-        // set the cookie
-        const cookie = setTokenCookie(token, res)
-        console.log({ cookie })
-        res.send({ done: true, msg: 'not a new user' })
-      }
+      // set the cookie
+      setTokenCookie(token, res)
+      res.send({ done: true })
     } catch (error) {
       console.error('Something went wrong logging in', error)
-      res.status(500).send({ done: false, msg: '' })
+      res.status(500).send({ done: false })
     }
   } else {
-    res.send({ done: false, msg: '' })
+    res.send({ done: false })
   }
 }
