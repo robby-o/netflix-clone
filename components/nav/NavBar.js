@@ -34,7 +34,7 @@ const NavBar = () => {
 
   const handleOnClickMyList = (e) => {
     e.preventDefault()
-    router.push('/browse/my-list')
+    // router.push('/browse/my-list')
   }
 
   const handleShowDropDown = (e) => {
@@ -57,18 +57,16 @@ const NavBar = () => {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <a className={styles.logoLink}>
+        <Link href='/'>
           <div className={styles.logoWrapper}>
-            <Link href='/'>
-              <Image
-                src='/static/netflix.svg'
-                alt='Netflix logo'
-                width={128}
-                height={34}
-              />
-            </Link>
+            <Image
+              src='/static/netflix.svg'
+              alt='Netflix logo'
+              width={128}
+              height={34}
+            />
           </div>
-        </a>
+        </Link>
         <ul className={styles.navItems}>
           <li className={styles.navItem} onClick={handleOnClickHome}>
             Home

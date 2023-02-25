@@ -45,14 +45,5 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={robotoslab.className}>
       {isLoading ? <Loading /> : <Component {...pageProps} />}
     </main>
-    // <main className={robotoslab.className}>
-    //   {isLoading ? (
-    //     <Loading />
-    //   ) : (
-    //     <Layout>
-    //       <Component {...pageProps} />
-    //     </Layout>
-    //   )}
-    // </main>
   )
 }
