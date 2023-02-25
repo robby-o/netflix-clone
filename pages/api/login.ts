@@ -1,16 +1,13 @@
 import { magicAdmin } from '@/lib/magic-server'
 import jwt from 'jsonwebtoken'
 import { isNewUser, createNewUser } from '../../lib/db/hasura'
+import { setTokenCookie } from '@/lib/cookies'
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-type Data = {
+export type Data = {
   done: Boolean
   msg: string
-}
-
-type JWT_SECRET = {
-  JWT_SECRET: string
 }
 
 export default async function login(
@@ -36,18 +33,26 @@ export default async function login(
             'x-hasura-user-id': `${metadata.issuer}`,
           },
         },
-        process.env.JWT_SECRET as any
+        process.env.JWT_SECRET as string
       )
 
-      // CHECK IF USER EXISTS
+      // check if user exists
       const isNewUserQuery = await isNewUser(token, metadata.issuer)
 
       if (isNewUserQuery) {
-        // new user
+        // creat a new user
         const createNewUserMutation = await createNewUser(token, metadata)
         console.log({ createNewUserMutation })
+
+        // set the cookie
+
+        const cookie = setTokenCookie(token, res)
+        console.log({ cookie })
         res.send({ done: true, msg: 'is new user' })
       } else {
+        // set the cookie
+        const cookie = setTokenCookie(token, res)
+        console.log({ cookie })
         res.send({ done: true, msg: 'not a new user' })
       }
     } catch (error) {
