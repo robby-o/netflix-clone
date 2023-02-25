@@ -38,7 +38,6 @@
   font-size: 0.8rem;
   margin: 0px;
   padding: 0px;
-
   line-height: 1.25rem /* 20px */;
   list-style: none;
 }
@@ -72,9 +71,8 @@
   position: absolute;
   margin-left: auto;
   margin-top: 0.5rem /* 8px */;
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
-  padding-right: 0.5rem;
+  /* padding-bottom: 0.5rem 8px;
+  padding-right: 0.5rem; */
   background-color: var(--black50);
   border-width: 1px;
   color: var(--white);
@@ -102,11 +100,6 @@
 
 .linkName:hover {
   text-decoration: underline;
-}
-
-.lineWrapper {
-  padding-top: 0.5rem /* 8px */;
-  padding-bottom: 0.5rem /* 8px */;
 }
 
 @media (min-width: 720px) {

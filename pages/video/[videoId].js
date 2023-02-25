@@ -11,9 +11,19 @@ export async function getStaticProps(context) {
 
   const videoArray = await getYoutubeVideoById(videoId)
 
+  const isDev = process.env.DEVELOPMENT
+  const videoById = videoArray.find((video) => video.id === videoId) || {}
+
+  const video = isDev
+    ? videoById
+    : videoArray.length > 0
+    ? videoArray[0]
+    : {}
+
   return {
     props: {
-      video: videoArray.length > 0 ? videoArray[0] : {},
+      video,
+      // video: videoArray.length > 0 ? videoArray[0] : {},
     },
     revalidate: 10, // in seconds
   }

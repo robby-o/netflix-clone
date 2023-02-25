@@ -99,9 +99,8 @@ const NavBar = () => {
                     href='/login'
                     onClick={handleSignOut}
                   >
-                    Sign out
+                    Sign out from Netflix
                   </Link>
-                  <div className={styles.lineWrapper}></div>
                 </div>
               </div>
             )}
