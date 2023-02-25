@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { magic } from '../../lib/magic-client'
-import { MagicPayloadMethod, UserInfo } from '@magic-sdk/types'
 
 import styles from './Navbar.module.css'
 
@@ -17,8 +16,6 @@ const NavBar = () => {
       try {
         // const { email }: UserInfo = await magic.user.getMetadata()
         const { email } = await magic.user.getMetadata()
-        const didToken = await magic.user.getIdToken()
-        console.log(didToken)
         if (email) {
           setUsername(email)
         }

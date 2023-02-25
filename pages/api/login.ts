@@ -1,12 +1,12 @@
 import { magicAdmin } from '@/lib/magic-server'
 import jwt from 'jsonwebtoken'
-import { isNewUser } from '../../lib/db/hasura'
+import { isNewUser, createNewUser } from '../../lib/db/hasura'
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
   done: Boolean
-  isNewUserQuery: any
+  msg: string
 }
 
 type JWT_SECRET = {
@@ -41,12 +41,20 @@ export default async function login(
 
       // CHECK IF USER EXISTS
       const isNewUserQuery = await isNewUser(token, metadata.issuer)
-      res.send({ done: true, isNewUserQuery })
+
+      if (isNewUserQuery) {
+        // new user
+        const createNewUserMutation = await createNewUser(token, metadata)
+        console.log({ createNewUserMutation })
+        res.send({ done: true, msg: 'is new user' })
+      } else {
+        res.send({ done: true, msg: 'not a new user' })
+      }
     } catch (error) {
       console.error('Something went wrong logging in', error)
-      res.status(500).send({ done: false, isNewUserQuery: '' })
+      res.status(500).send({ done: false, msg: '' })
     }
   } else {
-    res.send({ done: false, isNewUserQuery: '' })
+    res.send({ done: false, msg: '' })
   }
 }
