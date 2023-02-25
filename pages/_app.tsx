@@ -1,18 +1,25 @@
-// import type { AppProps } from 'next/app'
-import { useEffect, useState } from 'react'
+import type { AppProps } from 'next/app'
+import { Roboto_Slab } from 'next/font/google'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import Loading from '../components/loading/Loading'
+import Layout from '../components/layout/Layout'
 import { magic } from '../lib/magic-client'
 import '../styles/globals.css'
-import Loading from '../components/loading/Loading'
 
-// export default function App({ Component, pageProps }: AppProps) {
-function MyApp({ Component, pageProps }) {
+const robotoslab = Roboto_Slab({
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const handleLoggedIn = async () => {
       const isLoggedIn = await magic.user.isLoggedIn()
+
       if (isLoggedIn) {
         router.push('/')
       } else {
@@ -34,7 +41,18 @@ function MyApp({ Component, pageProps }) {
       router.events.off('routeChangeError', handleComplete)
     }
   }, [router])
-  return isLoading ? <Loading /> : <Component {...pageProps} />
+  return (
+    <main className={robotoslab.className}>
+      {isLoading ? <Loading /> : <Component {...pageProps} />}
+    </main>
+    // <main className={robotoslab.className}>
+    //   {isLoading ? (
+    //     <Loading />
+    //   ) : (
+    //     <Layout>
+    //       <Component {...pageProps} />
+    //     </Layout>
+    //   )}
+    // </main>
+  )
 }
-
-export default MyApp

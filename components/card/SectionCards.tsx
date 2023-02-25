@@ -2,11 +2,12 @@ import { FC } from 'react'
 import Card from './Card'
 import styles from './SectionCards.module.css'
 import { Video } from '@/pages'
+import Link from 'next/link'
 
 type SectionCardProps = {
+  size: string
   title: string
   videos: Video[]
-  size: string
 }
 
 const SectionCards: FC<SectionCardProps> = ({
@@ -19,7 +20,9 @@ const SectionCards: FC<SectionCardProps> = ({
       <h2 className={styles.title}>{title}</h2>
       <div className={styles.cardWrapper}>
         {videos.map((video, idx) => (
-          <Card key={idx} id={idx} imgUrl={video.imgUrl} size={size} />
+          <Link key={idx} href={`/video/${video.id}`}>
+            <Card id={idx} imgUrl={video.imgUrl} size={size} />
+          </Link>
         ))}
       </div>
     </section>

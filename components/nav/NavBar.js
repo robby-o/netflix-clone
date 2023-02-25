@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { magic } from '../../lib/magic-client'
+import { MagicPayloadMethod, UserInfo } from '@magic-sdk/types'
 
-import styles from './navbar.module.css'
+import styles from './Navbar.module.css'
 
 const NavBar = () => {
   const [showDropDown, setShowDropDown] = useState(false)
@@ -14,6 +15,7 @@ const NavBar = () => {
   useEffect(() => {
     async function getUsername() {
       try {
+        // const { email }: UserInfo = await magic.user.getMetadata()
         const { email } = await magic.user.getMetadata()
         if (email) {
           setUsername(email)
@@ -46,7 +48,6 @@ const NavBar = () => {
     try {
       router.push('/login')
       await magic.user.logout()
-      console.log(await magic.user.isLoggedIn())
     } catch (error) {
       console.log('Error signing out', error)
       router.push('/login')
@@ -58,12 +59,14 @@ const NavBar = () => {
       <div className={styles.wrapper}>
         <a className={styles.logoLink}>
           <div className={styles.logoWrapper}>
-            <Image
-              src='/static/netflix.svg'
-              alt='Netflix logo'
-              width={128}
-              height={34}
-            />
+            <Link href='/'>
+              <Image
+                src='/static/netflix.svg'
+                alt='Netflix logo'
+                width={128}
+                height={34}
+              />
+            </Link>
           </div>
         </a>
         <ul className={styles.navItems}>

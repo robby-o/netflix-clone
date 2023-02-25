@@ -67,7 +67,7 @@ const Login = () => {
 
       <header className={styles.header}>
         <div className={styles.headerWrapper}>
-          <Link className={styles.logoLink} href='/'>
+          <Link as='/' className={styles.logoLink} href='/'>
             <div className={styles.logoWrapper}>
               <Image
                 src='/static/netflix.svg'

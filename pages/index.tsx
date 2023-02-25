@@ -4,14 +4,9 @@ import Banner from '../components/banner/Banner'
 import SectionCards from '../components/card/SectionCards'
 import NavBar from '../components/nav/NavBar'
 
-import videos from '../data/videos.json'
-
 import { getPopularVideos, getVideos } from '../lib/videos'
 
 import styles from '@/styles/Home.module.css'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export type Video = {
   id: string
@@ -24,8 +19,10 @@ export type HomeProps = {
   productivityVideos: Video[]
   travelVideos: Video[]
   popularVideos: Video[]
+  mappedData: Video[]
 }
 
+// getInitialProps?
 export const getServerSideProps = async () => {
   const disneyVideos: Video[] = await getVideos('disney trailer')
   console.log(Date.now(), 'start')
@@ -53,6 +50,7 @@ const Home: FC<HomeProps> = ({
   productivityVideos,
   travelVideos,
   popularVideos,
+  // mappedData,
 }) => {
   return (
     <>
@@ -73,37 +71,38 @@ const Home: FC<HomeProps> = ({
         <main className={styles.main}>
           <NavBar />
           <Banner
-            title='Clifford the red dog'
-            subTitle='a very cute dog'
             imgUrl='/static/clifford.webp'
+            subTitle='a very cute dog'
+            title='Clifford the red dog'
+            videoId='4zH5iYM4wJo'
           />
 
           <div className={styles.sectionWrapper}>
             <SectionCards
               title='Disney'
               videos={disneyVideos}
-              // videos={videos.items}
+              // videos={mappedData}
               size='large'
             />
 
             <SectionCards
               title='Travel'
               videos={travelVideos}
-              // videos={videos.items}
+              // videos={mappedData}
               size='small'
             />
 
             <SectionCards
               title='Productivity'
               videos={productivityVideos}
-              // videos={videos.items}
+              // videos={mappedData}
               size='medium'
             />
 
             <SectionCards
               title='Popular'
               videos={popularVideos}
-              // videos={videos.items}
+              // videos={mappedData}
               size='small'
             />
           </div>

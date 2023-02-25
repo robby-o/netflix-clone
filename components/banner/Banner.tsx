@@ -1,16 +1,25 @@
 import styles from './banner.module.css'
 import Image from 'next/image'
 import { FC } from 'react'
+import { useRouter } from 'next/router'
 
 type BannerCardProps = {
   title: string
   subTitle: string
   imgUrl: string
+  videoId: string
 }
 
-const Banner: FC<BannerCardProps> = ({ title, subTitle, imgUrl }) => {
+const Banner: FC<BannerCardProps> = ({
+  title,
+  subTitle,
+  imgUrl,
+  videoId,
+}) => {
+  const router = useRouter()
+
   const handleOnPlay = () => {
-    console.log('handleOnPlay')
+    router.push(`video/${videoId}`)
   }
   return (
     <div className={styles.container}>
