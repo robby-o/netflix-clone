@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import NavBar from '@/components/nav/NavBar'
 import { getYoutubeVideoById } from '@/lib/videos'
-import Like from '../../components/icons/like-icon'
-import DisLike from '../../components/icons/dislike-icon'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import Modal from 'react-modal'
+import DisLike from '../../components/icons/dislike-icon'
+import Like from '../../components/icons/like-icon'
 import styles from '../../styles/Video.module.css'
 
 Modal.setAppElement('#__next')
@@ -56,6 +56,26 @@ const Video = ({ video }) => {
     statistics: { viewCount } = { viewCount: 0 },
   } = video
 
+  useEffect(() => {
+    const handleLikeDislikeService = async () => {
+      const response = await fetch(`/api/stats?videoId=${videoId}`, {
+        method: 'GET',
+        'Access-Control-Allow-Origin': '*',
+      })
+      const data = await response.json()
+
+      if (data.length > 0) {
+        const favorited = data[0].favorited
+        if (favorited === 1) {
+          setToggleLike(true)
+        } else if (favorited === 0) {
+          setToggleDisLike(true)
+        }
+      }
+    }
+    handleLikeDislikeService()
+  }, [videoId])
+
   const runRatingService = async (favorited) => {
     return await fetch('/api/stats', {
       method: 'POST',
@@ -65,6 +85,7 @@ const Video = ({ video }) => {
       }),
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
       },
     })
   }
@@ -76,8 +97,7 @@ const Video = ({ video }) => {
     setToggleLike(toggleDisLike)
 
     const favorited = val ? 0 : 1
-    const response = await runRatingService(favorited)
-    console.log('data', await response.json())
+    await runRatingService(favorited)
   }
 
   const handleToggleLike = async () => {
@@ -87,8 +107,7 @@ const Video = ({ video }) => {
     setToggleDisLike(toggleLike)
 
     const favorited = val ? 1 : 0
-    const response = await runRatingService(favorited)
-    console.log('data', await response.json())
+    await runRatingService(favorited)
   }
 
   return (

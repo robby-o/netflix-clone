@@ -4,7 +4,11 @@ import Banner from '../components/banner/Banner'
 import SectionCards from '../components/card/SectionCards'
 import NavBar from '../components/nav/NavBar'
 
-import { getPopularVideos, getVideos } from '../lib/videos'
+import {
+  getPopularVideos,
+  getVideos,
+  getWatchItAgainVideos,
+} from '../lib/videos'
 
 import styles from '@/styles/Home.module.css'
 
@@ -19,6 +23,7 @@ export type HomeProps = {
   productivityVideos: Video[]
   travelVideos: Video[]
   popularVideos: Video[]
+  watchItAgainVideos: Video[]
   mappedData: Video[]
 }
 
@@ -35,12 +40,19 @@ export const getServerSideProps = async () => {
   console.log('making request for popular')
   console.log(Date.now(), 'end')
 
+  const userId = 'did:ethr:0x62Fa020fF49f61c90668ad11889793A6c9DdFf28'
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3N1ZXIiOiJkaWQ6ZXRocjoweDYyRmEwMjBmRjQ5ZjYxYzkwNjY4YWQxMTg4OTc5M0E2YzlEZEZmMjgiLCJwdWJsaWNBZGRyZXNzIjoiMHg2MkZhMDIwZkY0OWY2MWM5MDY2OGFkMTE4ODk3OTNBNmM5RGRGZjI4IiwiZW1haWwiOiJydWdjYXRjaGVyQGdtYWlsLmNvbSIsIm9hdXRoUHJvdmlkZXIiOm51bGwsInBob25lTnVtYmVyIjpudWxsLCJ3YWxsZXRzIjpbXSwiaWF0IjoxNjc3MzcyMjU0LCJleHAiOjE2Nzc5NzcwNTQsImh0dHBzOi8vaGFzdXJhLmlvL2p3dC9jbGFpbXMiOnsieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJ1c2VyIiwiYWRtaW4iXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJkaWQ6ZXRocjoweDYyRmEwMjBmRjQ5ZjYxYzkwNjY4YWQxMTg4OTc5M0E2YzlEZEZmMjgifX0.ict4OmuXbANtYtX6eAeXjeibL0jUYNrUoZqDOfpWQWQ'
+
+  const watchItAgainVideos = await getWatchItAgainVideos(userId, token)
+
   return {
     props: {
       disneyVideos,
       productivityVideos,
       travelVideos,
       popularVideos,
+      watchItAgainVideos,
     },
   }
 }
@@ -50,8 +62,10 @@ const Home: FC<HomeProps> = ({
   productivityVideos,
   travelVideos,
   popularVideos,
+  watchItAgainVideos,
   // mappedData,
 }) => {
+  console.log({ watchItAgainVideos })
   return (
     <>
       <main className={styles.container}>
@@ -83,6 +97,12 @@ const Home: FC<HomeProps> = ({
               videos={disneyVideos}
               // videos={mappedData}
               size='large'
+            />
+
+            <SectionCards
+              title='Watch it again'
+              videos={watchItAgainVideos}
+              size='small'
             />
 
             <SectionCards
