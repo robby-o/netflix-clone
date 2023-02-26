@@ -56,39 +56,40 @@ const Video = ({ video }) => {
     statistics: { viewCount } = { viewCount: 0 },
   } = video
 
-  const handleToggleDislike = async () => {
-    setToggleDisLike(!toggleDisLike)
-    setToggleLike(toggleDisLike)
-
-    const val = !toggleDisLike
-    const response = await fetch('/api/stats', {
+  const runRatingService = async (favorited) => {
+    return await fetch('/api/stats', {
       method: 'POST',
       body: JSON.stringify({
         videoId,
-        favorited: val ? 0 : 1,
+        favorited,
       }),
       headers: {
         'Content-Type': 'application/json',
       },
     })
+  }
+
+  const handleToggleDislike = async () => {
+    console.log('handleToggleDislike')
+    const val = !toggleDisLike
+
+    setToggleDisLike(!toggleDisLike)
+    setToggleLike(toggleDisLike)
+
+    const favorited = val ? 0 : 1
+    const response = await runRatingService(favorited)
     console.log('data', await response.json())
   }
 
   const handleToggleLike = async () => {
-    setToggleLike(!toggleLike)
+    console.log('handleToggleLike')
+    const val = !toggleLike
+
+    setToggleLike(val)
     setToggleDisLike(toggleLike)
 
-    const val = !toggleLike
-    const response = await fetch('/api/stats', {
-      method: 'POST',
-      body: JSON.stringify({
-        videoId,
-        favorited: val ? 1 : 0,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const favorited = val ? 1 : 0
+    const response = await runRatingService(favorited)
     console.log('data', await response.json())
   }
 
@@ -108,7 +109,7 @@ const Video = ({ video }) => {
           type='text/html'
           width='100%'
           height='360'
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=0&origin=http://example.com&controls=0&rel=1`}
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=0&origin=http://localhost:3000.com&controls=1&rel=1&modestbranding=1`}
         ></iframe>
 
         <div className={styles.likeDislikeBtnWrapper}>
