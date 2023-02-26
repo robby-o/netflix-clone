@@ -105,20 +105,14 @@
   margin: 0px;
 }
 
-@media (min-width: 1024px) {
-  .modal {
-    width: 75%;
-  }
-}
-
 /** LikeDislike */
 
 .likeDislikeBtnWrapper {
   display: flex;
   margin-bottom: 0.75rem /* 12px */;
   position: absolute;
-  top: 30%;
-  left: 70%;
+  top: 33%;
+  left: 45%;
   padding-left: 1rem /* 48px */;
 }
 
@@ -135,4 +129,24 @@
 
 .likeBtnWrapper {
   margin-right: 0.5rem /* 8px */;
+}
+
+@media (min-width: 600px) {
+  .likeDislikeBtnWrapper {
+    top: 33%;
+    left: 70%;
+  }
+}
+
+@media (min-width: 920px) {
+  .likeDislikeBtnWrapper {
+    top: 33%;
+    left: 80%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal {
+    width: 75%;
+  }
 }

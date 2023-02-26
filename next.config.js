@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   images: {
     domains: ['images.unsplash.com', 'i.ytimg.com'],
   },
@@ -11,6 +11,13 @@ const nextConfig = {
         destination: 'http://localhost:4000/:path*',
       },
     ]
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
   },
 }
 

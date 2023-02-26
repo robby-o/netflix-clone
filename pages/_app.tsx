@@ -14,21 +14,7 @@ const robotoslab = Roboto_Slab({
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const handleLoggedIn = async () => {
-      const isLoggedIn = await magic.user.isLoggedIn()
-      if (isLoggedIn) {
-        // route to /
-        router.push('/')
-      } else {
-        // route to /login
-        router.push('/login')
-      }
-    }
-    handleLoggedIn()
-  }, [])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const handleComplete = () => {

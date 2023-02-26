@@ -37,6 +37,14 @@
   z-index: 50;
 }
 
+.justify {
+  justify-content: space-evenly;
+}
+
+.spacing {
+  margin-bottom: 2rem;
+}
+
 @media (min-width: 768px) {
   .container {
     padding-left: 4rem /* 64px */;

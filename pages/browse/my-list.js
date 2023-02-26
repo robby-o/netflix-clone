@@ -10,16 +10,6 @@ export async function getServerSideProps(context) {
 
   const videos = await getMyList(userId, token)
 
-  if (!userId) {
-    return {
-      props: {},
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
   return {
     props: {
       myListVideos: videos,
@@ -42,6 +32,7 @@ const MyList = ({ myListVideos }) => {
             size='small'
             shouldWrap
             shouldScale={false}
+            isMyList={true}
           />
         </div>
       </main>

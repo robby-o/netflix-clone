@@ -32,16 +32,6 @@ export type HomeProps = {
 export const getServerSideProps = async (context) => {
   const { userId, token } = await useRedirectUser(context)
 
-  if (!userId) {
-    return {
-      redirect: {
-        props: {},
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
   const disneyVideos: Video[] = await getVideos('disney trailer')
   console.log(Date.now(), 'start')
   console.log('making request for disney')
@@ -105,12 +95,18 @@ const Home: FC<HomeProps> = ({
               videos={disneyVideos}
               // videos={mappedData}
               size='large'
+              isMyList={false}
+              shouldScale={true}
+              shouldWrap={false}
             />
 
             <SectionCards
               title='Watch it again'
               videos={watchItAgainVideos}
               size='small'
+              isMyList={false}
+              shouldScale={true}
+              shouldWrap={false}
             />
 
             <SectionCards
@@ -118,6 +114,9 @@ const Home: FC<HomeProps> = ({
               videos={travelVideos}
               // videos={mappedData}
               size='small'
+              isMyList={false}
+              shouldScale={true}
+              shouldWrap={false}
             />
 
             <SectionCards
@@ -125,6 +124,9 @@ const Home: FC<HomeProps> = ({
               videos={productivityVideos}
               // videos={mappedData}
               size='medium'
+              isMyList={false}
+              shouldScale={true}
+              shouldWrap={false}
             />
 
             <SectionCards
@@ -132,6 +134,9 @@ const Home: FC<HomeProps> = ({
               videos={popularVideos}
               // videos={mappedData}
               size='small'
+              isMyList={false}
+              shouldScale={true}
+              shouldWrap={false}
             />
           </div>
         </main>

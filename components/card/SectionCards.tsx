@@ -10,6 +10,7 @@ type SectionCardProps = {
   videos: Video[]
   shouldWrap: boolean
   shouldScale: boolean
+  isMyList: boolean
 }
 
 const SectionCards: FC<SectionCardProps> = ({
@@ -18,15 +19,21 @@ const SectionCards: FC<SectionCardProps> = ({
   size,
   shouldWrap = false,
   shouldScale,
+  isMyList,
 }) => {
   return (
     <section className={styles.container}>
       <h2 className={styles.title}>{title}</h2>
       <div
-        className={`${styles.cardWrapper} ${shouldWrap && styles.wrap}`}
+        className={`${styles.cardWrapper} 
+        ${shouldWrap && styles.wrap} ${isMyList && styles.justify}`}
       >
         {videos.map((video, idx) => (
-          <Link href={`/video/${video.id}`} key={video.id}>
+          <Link
+            href={`/video/${video.id}`}
+            key={video.id}
+            className={`${isMyList && styles.spacing}`}
+          >
             <Card
               id={idx}
               imgUrl={video.imgUrl}

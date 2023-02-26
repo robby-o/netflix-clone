@@ -54,7 +54,7 @@ const NavBar = () => {
         },
       })
 
-      const res = await response.json()
+      await response.json()
     } catch (error) {
       console.log('Error signing out', error)
       router.push('/login')
