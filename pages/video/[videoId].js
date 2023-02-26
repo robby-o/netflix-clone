@@ -70,7 +70,6 @@ const Video = ({ video }) => {
   }
 
   const handleToggleDislike = async () => {
-    console.log('handleToggleDislike')
     const val = !toggleDisLike
 
     setToggleDisLike(!toggleDisLike)
@@ -82,7 +81,6 @@ const Video = ({ video }) => {
   }
 
   const handleToggleLike = async () => {
-    console.log('handleToggleLike')
     const val = !toggleLike
 
     setToggleLike(val)

@@ -12,6 +12,7 @@ export type Data = {
   error?: string | unknown
   response?: []
   data?: NextApiResponse
+  user?: [] | null
 }
 
 type JwtPayload = {
@@ -22,25 +23,25 @@ export default async function stats(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method === 'POST') {
-    try {
-      const token = req.cookies.token
-      if (!token) {
-        res.status(403).send({})
-      } else {
-        const { videoId } = req.body
+  try {
+    const token = req.cookies.token
+    if (!token) {
+      res.status(403).send({})
+    } else {
+      const inputParams = req.method === 'POST' ? req.body : req.query
+      const { videoId } = inputParams
 
-        if (videoId) {
-          const decodedToken = jwt.verify(
-            token,
-            process.env.JWT_SECRET!
-          ) as JwtPayload
+      if (videoId) {
+        const decodedToken = jwt.verify(
+          token,
+          process.env.JWT_SECRET!
+        ) as JwtPayload
 
-          const userId = decodedToken.issuer
+        const userId = decodedToken.issuer
+        const findVideo = await findVideoIdByUser(token, userId, videoId)
+        const doesStatsExist = findVideo?.length > 0
 
-          const findVideo = await findVideoIdByUser(token, userId, videoId)
-          const doesStatsExist = findVideo?.length > 0
-
+        if (req.method === 'POST') {
           const { favorited, watched = true } = req.body
 
           if (doesStatsExist) {
@@ -52,6 +53,7 @@ export default async function stats(
             })
             res.send({ data: response })
           } else {
+            console.log({ watched, userId, videoId, favorited })
             const response = await insertStats(token, {
               watched,
               userId,
@@ -60,13 +62,20 @@ export default async function stats(
             })
             res.send({ data: response })
           }
+
+          // GET request
         } else {
-          res.status(500).send({ msg: 'VideoId is required' })
+          if (doesStatsExist) {
+            res.send(findVideo)
+          } else {
+            res.status(404)
+            res.send({ user: null, msg: 'Video not found' })
+          }
         }
       }
-    } catch (error) {
-      console.error('Error occurred in /stats', error)
-      res.status(500).send({ done: false, error })
     }
+  } catch (error) {
+    console.error('Error occured in /stats', error)
+    res.status(500).send({ done: false, error })
   }
 }
