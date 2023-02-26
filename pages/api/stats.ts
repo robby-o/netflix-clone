@@ -1,12 +1,18 @@
 import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { findVideoIdByUser } from '../../lib/db/hasura'
+import {
+  findVideoIdByUser,
+  insertStats,
+  updateStats,
+} from '../../lib/db/hasura'
 
 export type Data = {
   done?: boolean
   msg?: string
-  error?: string
-  decoded?: any
+  error?: string | unknown
+  decodedToken?: string | jwt.JwtPayload
+  doesStatsExist?: boolean
+  response?: []
 }
 
 export default async function stats(
@@ -26,9 +32,24 @@ export default async function stats(
         )
         const userId = decodedToken.issuer
 
-        const findVideoId = await findVideoIdByUser(token, userId, videoId)
-
-        res.send({ msg: 'it works', decodedToken, findVideoId })
+        const doesStatsExist = await findVideoIdByUser(
+          token,
+          userId,
+          videoId
+        )
+        if (doesStatsExist) {
+          // update it
+          const response = await updateStats(token, {
+            watched: true,
+            userId,
+            videoId: '4zH5iYM4wJo',
+            favorited: 1,
+          })
+          res.send({ msg: 'it works', response })
+        } else {
+          // add it
+          res.send({ msg: 'it works', decodedToken, doesStatsExist })
+        }
       }
     } catch (error) {
       console.error('Error occurred in /stats', error)
