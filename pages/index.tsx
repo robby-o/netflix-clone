@@ -3,7 +3,7 @@ import { FC } from 'react'
 import Banner from '../components/banner/Banner'
 import SectionCards from '../components/card/SectionCards'
 import NavBar from '../components/nav/NavBar'
-import useRedirectUser from '../utils/redirectUser'
+import redirectUser from '../utils/redirectUser'
 
 import {
   getPopularVideos,
@@ -30,7 +30,7 @@ export type HomeProps = {
 
 // getInitialProps?
 export const getServerSideProps = async (context) => {
-  const { userId, token } = await useRedirectUser(context)
+  const { userId, token } = await redirectUser(context)
 
   const disneyVideos: Video[] = await getVideos('disney trailer')
   console.log(Date.now(), 'start')
