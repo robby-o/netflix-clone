@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { magic } from '../lib/magic-client'
 
-import styles from '@/styles/Login.module.css'
+import styles from '../styles/Login.module.css'
 
 const Login = () => {
   const [email, setEmail] = useState('')
