@@ -10,9 +10,8 @@ export type Data = {
   done?: boolean
   msg?: string
   error?: string | unknown
-  decodedToken?: string | jwt.JwtPayload
-  doesStatsExist?: boolean
   response?: []
+  data?: NextApiResponse
 }
 
 export default async function stats(
@@ -25,7 +24,7 @@ export default async function stats(
       if (!token) {
         res.status(403).send({})
       } else {
-        const { videoId, favorited, watched = true } = req.body
+        const { videoId } = req.body
 
         if (videoId) {
           const decodedToken = jwt.verify(
@@ -34,11 +33,11 @@ export default async function stats(
           )
 
           const userId = decodedToken.issuer
-          const doesStatsExist = await findVideoIdByUser(
-            token,
-            userId,
-            videoId
-          )
+
+          const findVideo = await findVideoIdByUser(token, userId, videoId)
+          const doesStatsExist = findVideo?.length > 0
+
+          const { favorited, watched = true } = req.body
 
           if (doesStatsExist) {
             const response = await updateStats(token, {
@@ -47,7 +46,7 @@ export default async function stats(
               videoId,
               favorited,
             })
-            res.send({ msg: 'it works', response })
+            res.send({ data: response })
           } else {
             const response = await insertStats(token, {
               watched,
@@ -55,8 +54,10 @@ export default async function stats(
               videoId,
               favorited,
             })
-            res.send({ msg: 'it works', response })
+            res.send({ data: response })
           }
+        } else {
+          res.status(500).send({ msg: 'VideoId is required' })
         }
       }
     } catch (error) {
