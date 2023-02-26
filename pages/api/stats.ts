@@ -42,13 +42,19 @@ export default async function stats(
           const response = await updateStats(token, {
             watched: true,
             userId,
-            videoId: '4zH5iYM4wJo',
-            favorited: 1,
+            videoId,
+            favorited: 0,
           })
           res.send({ msg: 'it works', response })
         } else {
           // add it
-          res.send({ msg: 'it works', decodedToken, doesStatsExist })
+          const response = await insertStats(token, {
+            watched: false,
+            userId,
+            videoId,
+            favorited: 0,
+          })
+          res.send({ msg: 'it works', response })
         }
       }
     } catch (error) {
