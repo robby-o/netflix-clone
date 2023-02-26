@@ -41,36 +41,40 @@ export default async function stats(
         const findVideo = await findVideoIdByUser(token, userId, videoId)
         const doesStatsExist = findVideo?.length > 0
 
-        if (req.method === 'POST') {
-          const { favorited, watched = true } = req.body
+        switch (req.method) {
+          case 'POST':
+            const { favorited, watched = true } = req.body
+            if (doesStatsExist) {
+              const response = await updateStats(token, {
+                watched,
+                userId,
+                videoId,
+                favorited,
+              })
+              res.send({ data: response })
+            } else {
+              console.log({ watched, userId, videoId, favorited })
+              const response = await insertStats(token, {
+                watched,
+                userId,
+                videoId,
+                favorited,
+              })
+              res.send({ data: response })
+            }
+            break
+          case 'GET':
+            if (doesStatsExist) {
+              res.send(findVideo)
+            } else {
+              res.status(404)
+              res.send({ user: null, msg: 'Video not found' })
+            }
+            break
 
-          if (doesStatsExist) {
-            const response = await updateStats(token, {
-              watched,
-              userId,
-              videoId,
-              favorited,
-            })
-            res.send({ data: response })
-          } else {
-            console.log({ watched, userId, videoId, favorited })
-            const response = await insertStats(token, {
-              watched,
-              userId,
-              videoId,
-              favorited,
-            })
-            res.send({ data: response })
-          }
-
-          // GET request
-        } else {
-          if (doesStatsExist) {
-            res.send(findVideo)
-          } else {
-            res.status(404)
-            res.send({ user: null, msg: 'Video not found' })
-          }
+          default:
+            res.send({ msg: 'Request method not available' })
+            break
         }
       }
     }
