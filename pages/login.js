@@ -43,12 +43,15 @@ const Login = () => {
         const didToken = await magic.auth.loginWithMagicLink({
           email,
         })
+
         if (didToken) {
           const response = await fetch('/api/login', {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${didToken}`,
               'Content-Type': 'application/json',
+              Accept: 'application/json',
+              'Access-Control-Allow-Origin': '*',
             },
           })
 
