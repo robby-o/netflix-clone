@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { findVideoIdByUser } from '../../lib/db/hasura'
 
 export type Data = {
   done?: boolean
@@ -18,13 +19,20 @@ export default async function stats(
       if (!token) {
         res.status(403).send({})
       } else {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
-        console.log({ decoded })
-        res.send({ msg: 'it works', decoded })
+        const videoId = req.query.videoId
+        const decodedToken = jwt.verify(
+          token,
+          process.env.JWT_SECRET as string
+        )
+        const userId = decodedToken.issuer
+
+        const findVideoId = await findVideoIdByUser(token, userId, videoId)
+
+        res.send({ msg: 'it works', decodedToken, findVideoId })
       }
     } catch (error) {
       console.error('Error occurred in /stats', error)
-      res.status(500).send({ done: false, error: error?.message })
+      res.status(500).send({ done: false, error })
     }
   }
 }
