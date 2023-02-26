@@ -3,6 +3,7 @@ import { FC } from 'react'
 import Banner from '../components/banner/Banner'
 import SectionCards from '../components/card/SectionCards'
 import NavBar from '../components/nav/NavBar'
+import { verifyToken } from '@/lib/utils'
 
 import {
   getPopularVideos,
@@ -28,7 +29,20 @@ export type HomeProps = {
 }
 
 // getInitialProps?
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
+  const token = context.req ? context.req?.cookies.token : null
+  const userId = await verifyToken(token)
+
+  if (!userId) {
+    return {
+      redirect: {
+        props: {},
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
   const disneyVideos: Video[] = await getVideos('disney trailer')
   console.log(Date.now(), 'start')
   console.log('making request for disney')
@@ -39,10 +53,6 @@ export const getServerSideProps = async () => {
   const popularVideos: Video[] = await getPopularVideos()
   console.log('making request for popular')
   console.log(Date.now(), 'end')
-
-  const userId = 'did:ethr:0x62Fa020fF49f61c90668ad11889793A6c9DdFf28'
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3N1ZXIiOiJkaWQ6ZXRocjoweDYyRmEwMjBmRjQ5ZjYxYzkwNjY4YWQxMTg4OTc5M0E2YzlEZEZmMjgiLCJwdWJsaWNBZGRyZXNzIjoiMHg2MkZhMDIwZkY0OWY2MWM5MDY2OGFkMTE4ODk3OTNBNmM5RGRGZjI4IiwiZW1haWwiOiJydWdjYXRjaGVyQGdtYWlsLmNvbSIsIm9hdXRoUHJvdmlkZXIiOm51bGwsInBob25lTnVtYmVyIjpudWxsLCJ3YWxsZXRzIjpbXSwiaWF0IjoxNjc3MzcyMjU0LCJleHAiOjE2Nzc5NzcwNTQsImh0dHBzOi8vaGFzdXJhLmlvL2p3dC9jbGFpbXMiOnsieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJ1c2VyIiwiYWRtaW4iXSwieC1oYXN1cmEtZGVmYXVsdC1yb2xlIjoidXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJkaWQ6ZXRocjoweDYyRmEwMjBmRjQ5ZjYxYzkwNjY4YWQxMTg4OTc5M0E2YzlEZEZmMjgifX0.ict4OmuXbANtYtX6eAeXjeibL0jUYNrUoZqDOfpWQWQ'
 
   const watchItAgainVideos = await getWatchItAgainVideos(userId, token)
 

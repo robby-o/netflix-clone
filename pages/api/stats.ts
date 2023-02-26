@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import { verifyToken } from '@/lib/utils'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {
   findVideoIdByUser,
@@ -15,10 +15,6 @@ export type Data = {
   user?: [] | null
 }
 
-type JwtPayload = {
-  issuer: string
-}
-
 export default async function stats(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -32,12 +28,8 @@ export default async function stats(
       const { videoId } = inputParams
 
       if (videoId) {
-        const decodedToken = jwt.verify(
-          token,
-          process.env.JWT_SECRET!
-        ) as JwtPayload
+        const userId = verifyToken(token)
 
-        const userId = decodedToken.issuer
         const findVideo = await findVideoIdByUser(token, userId, videoId)
         const doesStatsExist = findVideo?.length > 0
 
