@@ -14,6 +14,10 @@ export type Data = {
   data?: NextApiResponse
 }
 
+type JwtPayload = {
+  issuer: string
+}
+
 export default async function stats(
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -27,12 +31,10 @@ export default async function stats(
         const { videoId } = req.body
 
         if (videoId) {
-          const decodedToken = jwt.verify(
+          const { issuer: userId } = jwt.verify(
             token,
-            process.env.JWT_SECRET as string
-          )
-
-          const userId = decodedToken.issuer
+            process.env.JWT_SECRET!
+          ) as JwtPayload
 
           const findVideo = await findVideoIdByUser(token, userId, videoId)
           const doesStatsExist = findVideo?.length > 0
