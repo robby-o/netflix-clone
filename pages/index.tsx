@@ -3,7 +3,7 @@ import { FC } from 'react'
 import Banner from '../components/banner/Banner'
 import SectionCards from '../components/card/SectionCards'
 import NavBar from '../components/nav/NavBar'
-import { verifyToken } from '@/lib/utils'
+import useRedirectUser from '../utils/redirectUser'
 
 import {
   getPopularVideos,
@@ -30,18 +30,7 @@ export type HomeProps = {
 
 // getInitialProps?
 export const getServerSideProps = async (context) => {
-  const token = context.req ? context.req?.cookies.token : null
-  const userId = await verifyToken(token)
-
-  if (!userId) {
-    return {
-      redirect: {
-        props: {},
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
+  const { userId, token } = await useRedirectUser(context)
 
   const disneyVideos: Video[] = await getVideos('disney trailer')
   console.log(Date.now(), 'start')
