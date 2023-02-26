@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { magic } from '../../lib/magic-client'
 
-import styles from './Navbar.module.css'
+import styles from './NavBar.module.css'
 
 const NavBar = () => {
   const [showDropDown, setShowDropDown] = useState(false)

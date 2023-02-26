@@ -1,4 +1,4 @@
-import styles from './banner.module.css'
+import styles from './Banner.module.css'
 import Image from 'next/image'
 import { FC } from 'react'
 import { useRouter } from 'next/router'
