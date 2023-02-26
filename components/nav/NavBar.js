@@ -9,12 +9,12 @@ import styles from './Navbar.module.css'
 const NavBar = () => {
   const [showDropDown, setShowDropDown] = useState(false)
   const [username, setUsername] = useState('')
+  const [didToken, setDidToken] = useState('')
   const router = useRouter()
 
   useEffect(() => {
     async function getUsername() {
       try {
-        // const { email }: UserInfo = await magic.user.getMetadata()
         const { email } = await magic.user.getMetadata()
         if (email) {
           setUsername(email)
@@ -33,7 +33,7 @@ const NavBar = () => {
 
   const handleOnClickMyList = (e) => {
     e.preventDefault()
-    // router.push('/browse/my-list')
+    router.push('/browse/my-list')
   }
 
   const handleShowDropDown = (e) => {
@@ -45,8 +45,16 @@ const NavBar = () => {
     e.preventDefault()
 
     try {
-      router.push('/login')
-      await magic.user.logout()
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${didToken}`,
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
+
+      const res = await response.json()
     } catch (error) {
       console.log('Error signing out', error)
       router.push('/login')
@@ -61,8 +69,8 @@ const NavBar = () => {
             <Image
               src='/static/netflix.svg'
               alt='Netflix logo'
-              width={128}
-              height={34}
+              width='128'
+              height='34'
             />
           </div>
         </Link>

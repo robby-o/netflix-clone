@@ -32,6 +32,16 @@ export type HomeProps = {
 export const getServerSideProps = async (context) => {
   const { userId, token } = await useRedirectUser(context)
 
+  if (!userId) {
+    return {
+      redirect: {
+        props: {},
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
   const disneyVideos: Video[] = await getVideos('disney trailer')
   console.log(Date.now(), 'start')
   console.log('making request for disney')
@@ -64,7 +74,6 @@ const Home: FC<HomeProps> = ({
   watchItAgainVideos,
   // mappedData,
 }) => {
-  console.log({ watchItAgainVideos })
   return (
     <>
       <main className={styles.container}>

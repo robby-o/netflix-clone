@@ -19,3 +19,12 @@ export const setTokenCookie = (
   // sets in browser
   res.setHeader('Set-Cookie', setCookie)
 }
+
+export const removeTokenCookie = (res: NextApiResponse<Data>) => {
+  const val = cookie.serialize('token', '', {
+    maxAge: -1,
+    path: '/',
+  })
+
+  res.setHeader('Set-Cookie', val)
+}
