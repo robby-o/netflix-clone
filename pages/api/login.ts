@@ -43,7 +43,7 @@ export default async function login(
 
       // set the cookie
       setTokenCookie(token, res)
-      res.send({ done: true })
+      res.status(200).send({ done: true })
     } catch (error) {
       console.error('Something went wrong logging in', error)
       res.status(500).send({ done: false })
