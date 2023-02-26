@@ -20,7 +20,7 @@ const NavBar = () => {
           setUsername(email)
         }
       } catch (error) {
-        console.log('Error retrieving email:', error)
+        console.error('Error retrieving email:', error)
       }
     }
     getUsername()
@@ -56,7 +56,7 @@ const NavBar = () => {
 
       await response.json()
     } catch (error) {
-      console.log('Error signing out', error)
+      console.error('Error signing out', error)
       router.push('/login')
     }
   }
